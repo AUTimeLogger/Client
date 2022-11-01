@@ -1,6 +1,57 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import { useEffect, useState } from "react";
+import Head from "next/head";
+import { AppProps } from "next/app";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { CacheProvider, EmotionCache } from "@emotion/react";
+import theme from "../src/utils/theme";
+import createEmotionCache from "../src/utils/createEmotionCache";
+import Layout from "@/components/layouts";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+if (process.env.NEXT_PUBLIC_MOCKING === "true") {
+  require("../mocks");
+}
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+// Client-side cache, shared for the whole session of the user in the browser.
+const clientSideEmotionCache = createEmotionCache();
+
+interface MyAppProps extends AppProps {
+  emotionCache?: EmotionCache;
+}
+
+export default function MyApp(props: MyAppProps) {
+  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const [domLoaded, setDomLoaded] = useState(false);
+
+  useEffect(() => {
+    setDomLoaded(true);
+  }, []);
+
+  return (
+    <CacheProvider value={emotionCache}>
+      <Head>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
+      <ThemeProvider theme={theme}>
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        <CssBaseline />
+        {domLoaded && (
+          <Layout>
+            <QueryClientProvider client={queryClient}>
+              <Component {...pageProps} />
+            </QueryClientProvider>
+          </Layout>
+        )}
+      </ThemeProvider>
+    </CacheProvider>
+  );
 }
