@@ -1,11 +1,11 @@
 import * as React from "react";
+import { DocumentTextIcon } from "@heroicons/react/24/outline";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { DocumentTextIcon } from "@heroicons/react/24/outline";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 type ProjectCardProps = {
   title: string;
@@ -36,7 +36,10 @@ export default function ProjectCard({
       </CardContent>
       {!disableAction && (
         <CardActions>
-          <Button size="small" onClick={() => handleButtonClick(href)}>
+          <Button
+            size="small"
+            onClick={() => (href ? handleButtonClick?.(href) : null)}
+          >
             Edit
           </Button>
         </CardActions>

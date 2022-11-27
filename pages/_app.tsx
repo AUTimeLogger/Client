@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import Head from "next/head";
 import { AppProps } from "next/app";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import Head from "next/head";
 import { CacheProvider, EmotionCache } from "@emotion/react";
-import theme from "../src/utils/theme";
-import createEmotionCache from "../src/utils/createEmotionCache";
-import Layout from "@/components/layouts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import Layout from "@/components/layouts";
+import createEmotionCache from "@/utils/createEmotionCache";
+import theme from "@/utils/theme";
 
 if (process.env.NEXT_PUBLIC_MOCKING === "true") {
   require("../mocks");

@@ -1,26 +1,23 @@
 import * as React from "react";
+import { useRouter } from "next/router";
+import {
+  ArrowRightOnRectangleIcon,
+  ClipboardDocumentListIcon,
+  ClockIcon,
+  DocumentDuplicateIcon,
+  HomeIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+import { v4 as uuidv4 } from "uuid";
 import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
+import MuiDrawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import { v4 as uuidv4 } from "uuid";
-import { useRouter } from "next/router";
-import {
-  ClockIcon,
-  HomeIcon,
-  UsersIcon,
-  ClipboardDocumentListIcon,
-  DocumentDuplicateIcon,
-  ArrowRightOnRectangleIcon,
-} from "@heroicons/react/24/outline";
-import Icon from "@mui/material/Icon";
 
 type DrawerProps = {
   children?: React.ReactNode;
@@ -122,7 +119,7 @@ export default function Drawer({ children }: DrawerProps) {
                     : "grey.600",
                 }}
               >
-                <ListItemButton>
+                <ListItemButton sx={{ borderRadius: 3 }}>
                   <ListItemIcon
                     sx={{ minWidth: 32, display: "inline", color: "inherit" }}
                   >
@@ -135,22 +132,16 @@ export default function Drawer({ children }: DrawerProps) {
           </List>
           <Divider />
           <List sx={{ width: "100%", px: 1 }}>
-            {["Logout"].map((text, index) => (
-              <ListItem key={text} sx={{ color: "grey.600" }} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon
-                    sx={{ minWidth: 32, display: "inline", color: "inherit" }}
-                  >
-                    {index % 2 === 0 ? (
-                      <ArrowRightOnRectangleIcon style={{ height: 24 }} />
-                    ) : (
-                      <PermIdentityIcon />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
+            <ListItem sx={{ color: "grey.600" }} disablePadding>
+              <ListItemButton sx={{ borderRadius: 3 }}>
+                <ListItemIcon
+                  sx={{ minWidth: 32, display: "inline", color: "inherit" }}
+                >
+                  <ArrowRightOnRectangleIcon style={{ height: 24 }} />
+                </ListItemIcon>
+                <ListItemText primary="Log out" />
+              </ListItemButton>
+            </ListItem>
           </List>
         </Box>
       </MuiDrawer>
@@ -162,7 +153,7 @@ export default function Drawer({ children }: DrawerProps) {
           height: "100%",
           flexGrow: 1,
           py: 6,
-          px: 2,
+          px: 4,
           width: `calc(100% - ${drawerWidth + 50}px)`,
         }}
       >

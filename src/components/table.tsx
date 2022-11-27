@@ -1,15 +1,15 @@
-import * as React from "react";
+import { useMemo } from "react";
+import capitalize from "lodash/capitalize";
+import isEmpty from "lodash/isEmpty";
+import isUndefined from "lodash/isUndefined";
+import Paper from "@mui/material/Paper";
+import Skeleton from "@mui/material/Skeleton";
 import MuiTable from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import capitalize from "lodash/capitalize";
-import isEmpty from "lodash/isEmpty";
-import isUndefined from "lodash/isUndefined";
-import Skeleton from "@mui/material/Skeleton";
 
 type TableProps = {
   data: [];
@@ -67,12 +67,7 @@ function SkeletonTable() {
 }
 
 export default function Table({ data, sx }: TableProps) {
-  // if (isUndefined(data) || isEmpty(data)) return null;
-
-  const loading = React.useMemo(
-    () => isUndefined(data) || isEmpty(data),
-    [data]
-  );
+  const loading = useMemo(() => isUndefined(data) || isEmpty(data), [data]);
 
   return (
     <TableContainer
@@ -105,14 +100,14 @@ export default function Table({ data, sx }: TableProps) {
           {loading ? (
             <SkeletonTable />
           ) : (
-            data.map((datum, index) => (
+            data.map((datum) => (
               <TableRow
                 key={datum["id"]}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 {Object.entries(datum)
                   .filter(([key]) => key !== "id")
-                  .map(([key, value]) => (
+                  .map(([key]) => (
                     <TableCell key={`${datum["id"]}-${datum[key]}`}>
                       {datum[key]}
                     </TableCell>

@@ -1,14 +1,14 @@
-import ProjectCard from "@/components/project-card";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { Project } from "../mocks/types";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import ProjectCard from "@/components/project-card";
+import { Project } from "../mocks/types";
 
 const CURRENT_PAGE_URI = "/projects";
 

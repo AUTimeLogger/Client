@@ -1,10 +1,6 @@
-import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
+import { createTheme } from "@mui/material/styles";
 
-const shadowRing = "0 0 #000";
-const shadowChannel = "1 1 1";
-
-// Create a theme instance.
 const theme = createTheme({
   palette: {
     primary: {
@@ -36,6 +32,13 @@ const theme = createTheme({
           border: "1px solid rgb(229, 231, 235)",
           borderRadius: 12,
           boxShadow: "0 2px 5px -4px rgba(0,0,0,0.34)",
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
         },
       },
     },

@@ -1,49 +1,17 @@
-import { useState, useRef, useMemo } from "react";
+import { useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import capitalize from "lodash/capitalize";
-import Table from "@/components/table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import AddUserForm from "@/components/forms/add-user-form";
+import Table from "@/components/table";
 import { User } from "../mocks/types";
-
-const userFormFields = [
-  {
-    id: "username",
-    label: "Username",
-    type: "text",
-  },
-  {
-    id: "firstName",
-    label: "First name",
-    type: "text",
-  },
-  {
-    id: "lastName",
-    label: "Last name",
-    type: "text",
-  },
-  {
-    id: "email",
-    label: "Email",
-    type: "email",
-  },
-  {
-    id: "department",
-    label: "Department",
-    type: "text",
-  },
-];
 
 const getUsers = async () => {
   return fetch("/users").then((res) => res.json());
@@ -58,10 +26,8 @@ const deleteUser = async (userId: string) => {
 };
 
 export default function UsersPage() {
-  const inputRefs = useRef([]);
-  const [notification, setNotification] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogFormError, setDialogFormError] = useState("");
+  const [notification, setNotification] = useState("");
   const { isError, data: users } = useQuery(["users"], getUsers);
 
   const queryClient = useQueryClient();
@@ -86,13 +52,9 @@ export default function UsersPage() {
     },
   });
 
-  function isFormValid(formFields: User) {
-    return !Object.entries(formFields).some(
-      (formField) => formField[1].length === 0
-    );
-  }
+  function handleRemoveUser(userId: string | undefined) {
+    if (!userId) return;
 
-  function handleRemoveUser(userId: string) {
     console.log("remove user" + userId);
     deleteUserMutation.mutate(userId);
   }
@@ -105,21 +67,9 @@ export default function UsersPage() {
     setDialogOpen(false);
   }
 
-  function handleDialogFormSubmit() {
-    const extractedFormValues = Object.entries(inputRefs.current).reduce<{}>(
-      (acc, [key, value]) => ({ ...acc, [key]: value.value }),
-      {}
-    );
-
-    if (!isFormValid(extractedFormValues)) {
-      setDialogFormError("Please fill in all fields.");
-      return;
-    }
-
-    addUserMutation.mutate(extractedFormValues);
+  function handleDialogFormSubmit(userObject: User) {
+    addUserMutation.mutate(userObject);
     setDialogOpen(false);
-    setDialogFormError("");
-    console.log(extractedFormValues);
   }
 
   function handleSnackbarClose(
@@ -146,6 +96,7 @@ export default function UsersPage() {
           </Button>
         ),
       })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [users]
   );
 
@@ -160,7 +111,7 @@ export default function UsersPage() {
   return (
     <>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={12} lg={6}>
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -177,38 +128,14 @@ export default function UsersPage() {
             </Button>
           </Stack>
           <Table data={mappedUsers} />
-          <Dialog open={dialogOpen} onClose={handleDialogClose}>
-            <DialogTitle>Add new user</DialogTitle>
-            <DialogContent>
-              {dialogFormError && (
-                <Alert severity="error">{dialogFormError}</Alert>
-              )}
-
-              {userFormFields.map((userFormField) => (
-                <TextField
-                  inputRef={(el) => (inputRefs.current[userFormField.id] = el)}
-                  key={userFormField.id}
-                  label={userFormField.label}
-                  type={userFormField.type}
-                  margin="dense"
-                  fullWidth
-                />
-              ))}
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDialogClose}>Cancel</Button>
-              <Button
-                variant="contained"
-                onClick={handleDialogFormSubmit}
-                disabled={!isFormValid}
-              >
-                Add
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <AddUserForm
+            isOpen={dialogOpen}
+            handleClose={handleDialogClose}
+            handleSubmit={handleDialogFormSubmit}
+          />
           <Snackbar
             open={!!notification}
-            autoHideDuration={6000}
+            autoHideDuration={3000}
             onClose={handleSnackbarClose}
             sx={{ bottom: 120 }}
           >

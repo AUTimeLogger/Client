@@ -11,7 +11,7 @@ export type Review = {
 };
 
 export type User = {
-  userId: string;
+  userId?: string;
   username: string;
   firstName: string;
   lastName: string;

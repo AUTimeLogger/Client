@@ -1,6 +1,6 @@
+import Chance from "chance";
 import { rest } from "msw";
 import { Project, User } from "./types";
-import Chance from "chance";
 
 const c = new Chance();
 
@@ -81,25 +81,14 @@ export const handlers = [
       return res(ctx.delay(1000), ctx.json(createUserList(200)));
     }
   ),
-  rest.post(
-    "/users",
-    (
-      req: { body: string },
-      res: (arg0: any, arg1: undefined) => any,
-      ctx: {
-        status: (arg0: number) => any;
-        delay: (arg0: number) => any;
-        json: (arg0: User) => any;
-      }
-    ) => {
-      const user = JSON.parse(req.body);
-      if (user.username === "error") {
-        return res(ctx.delay(1000), ctx.status(403));
-      }
-
-      return res(ctx.delay(1000), ctx.json(createUser()));
+  rest.post("/users", async (req, res, ctx) => {
+    const user = await req.json();
+    if (user.username === "error") {
+      return res(ctx.delay(1000), ctx.status(403));
     }
-  ),
+
+    return res(ctx.delay(1000), ctx.json(createUser()));
+  }),
   rest.delete(
     "/users/:id",
     (
@@ -110,4 +99,7 @@ export const handlers = [
       return res(ctx.delay(1000), ctx.status(200));
     }
   ),
+  rest.post("/work-hours", (req, res, ctx) => {
+    return res(ctx.delay(1000), ctx.status(201));
+  }),
 ];

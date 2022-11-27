@@ -1,20 +1,20 @@
-import { User } from "@/../mocks/types";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/router";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import Table from "@/components/table";
 import {
-  useMemo,
-  useState,
-  useEffect,
   SetStateAction,
   SyntheticEvent,
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
-import Autocomplete from "@/components/autocomplete";
+import { useRouter } from "next/router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { User } from "@/../mocks/types";
+import Autocomplete from "@/components/autocomplete";
+import Table from "@/components/table";
 
 export default function ProjectPage() {
   const router = useRouter();
@@ -102,8 +102,6 @@ export default function ProjectPage() {
     if (!open) setOptions([]);
   }, [open]);
 
-  // return <LoadingContent />;
-  // if (status === "loading") return "asd";
   if (error) return "Error";
 
   return (
