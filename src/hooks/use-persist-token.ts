@@ -6,9 +6,6 @@ export default function usePersistToken() {
 
   useEffect(() => {
     if (session && session.autToken)
-      sessionStorage.setItem(
-        "aut-time-logger-token",
-        JSON.stringify(session?.autToken)
-      );
+      sessionStorage.setItem("aut-time-logger-token", session?.autToken);
   }, [session]);
 }

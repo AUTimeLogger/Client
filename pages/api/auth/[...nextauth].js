@@ -29,15 +29,18 @@ export const authOptions = {
         //   headers: { "Content-Type": "application/json" },
         // });
 
-        // TODO: return actual token from backend after login
-        // api/Access/login response includes it
-        // const res = await fetch("http://localhost:3000/Access/login", {
-        //   method: "POST",
-        //   body: JSON.stringify(credentials),
-        //   headers: { "Content-Type": "application/json" },
-        // });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/access/login`,
+          {
+            method: "POST",
+            body: JSON.stringify(credentials),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
-        const user = "d0b4c91f-403e-4944-a523-65cf78ff6ebd";
+        const result = await res.json();
+
+        const user = result.token;
 
         return user;
         // If no error and we have user data, return it
@@ -66,6 +69,13 @@ export const authOptions = {
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
+    // async redirect({ url, baseUrl }) {
+    //   // Allows relative callback URLs
+    //   if (url.startsWith("/")) return `${baseUrl}${url}`;
+    //   // Allows callback URLs on the same origin
+    //   else if (new URL(url).origin === baseUrl) return url;
+    //   return baseUrl;
+    // },
   },
 };
 

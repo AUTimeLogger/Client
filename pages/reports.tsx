@@ -19,7 +19,7 @@ export default function ReportsPage() {
   const [year, setYear] = useState<FakeYear | null>(null);
 
   const handleGenerateReportClick = () => {
-    console.log("Generatin report...");
+    console.log("Generating report...");
     console.log("Selected year: " + year?.email);
   };
 

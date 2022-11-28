@@ -10,18 +10,8 @@ import { User } from "@/../mocks/types";
 
 const userFormFields = [
   {
-    id: "username",
+    id: "userName",
     label: "Username",
-    type: "text",
-  },
-  {
-    id: "firstName",
-    label: "First name",
-    type: "text",
-  },
-  {
-    id: "lastName",
-    label: "Last name",
     type: "text",
   },
   {
@@ -30,8 +20,8 @@ const userFormFields = [
     type: "email",
   },
   {
-    id: "department",
-    label: "Department",
+    id: "password",
+    label: "Password",
     type: "text",
   },
 ];

@@ -8,7 +8,15 @@ export default function Home() {
   const axios = useAxios();
 
   const { isLoading, data: projects } = useQuery(["projects"], async () =>
-    axios.get("/projects").then((res) => res.data)
+    axios
+      .get("/projects", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem(
+            "aut-time-logger-token"
+          )}`,
+        },
+      })
+      .then((res) => res.data)
   );
 
   return (

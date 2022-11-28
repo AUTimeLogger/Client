@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { v4 as uuidv4 } from "uuid";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -29,22 +30,33 @@ type DrawerProps = {
 };
 
 const drawerWidth = 200;
-const getIdentity = async () => {
-  return fetch("/api/me").then((res) => res.json());
-};
 
 export default function Drawer({ children }: DrawerProps) {
   const axios = useAxios();
   const router = useRouter();
+  const { data: session } = useSession();
+
+  const getIdentity = async () => {
+    return axios
+      .get("/me", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem(
+            "aut-time-logger-token"
+          )}`,
+        },
+      })
+      .then((res) => res.data);
+  };
 
   const {
     isError,
     isLoading,
     data: identity,
-  } = useQuery(["identity"], getIdentity);
+  } = useQuery(["identity"], getIdentity, { retry: 1, enabled: !!session });
 
-  if (isLoading) return <LoadingContent />;
+  if (!session) return <UnauthorizedContent />;
   if (isError) return <UnauthorizedContent />;
+  // if (isLoading) return <LoadingContent />;
 
   const menuItems = [
     {
@@ -59,21 +71,21 @@ export default function Drawer({ children }: DrawerProps) {
       title: "Users",
       href: "/users",
       icon: <UsersIcon style={{ height: 24 }} />,
-      disabled: !identity.isAdmin,
+      disabled: !identity?.isAdmin,
     },
     {
       id: uuidv4(),
       title: "Projects",
       href: "/projects",
       icon: <DocumentDuplicateIcon style={{ height: 24 }} />,
-      disabled: !identity.isAdmin,
+      disabled: !identity?.isAdmin,
     },
     {
       id: uuidv4(),
       title: "Reports",
       href: "/reports",
       icon: <ClipboardDocumentListIcon style={{ height: 24 }} />,
-      disabled: !identity.isAdmin,
+      disabled: !identity?.isAdmin,
     },
   ];
 
@@ -82,7 +94,7 @@ export default function Drawer({ children }: DrawerProps) {
   }
 
   function handleSignOut() {
-    axios.post("/Access/logout");
+    axios.post("/access/logout");
     // signOut();
   }
 

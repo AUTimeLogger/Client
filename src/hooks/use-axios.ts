@@ -7,15 +7,16 @@ function interceptRequests(session: any, axiosInstance: any) {
 
   axiosInstance.interceptors.request.use((config: any) => {
     const newConfig = { ...config };
-    newConfig.headers.Authorization = session
-      ? "Bearer " + token
-      : "not authenticated";
+    newConfig.headers.Authorization = `Bearer ${token}`;
+    newConfig.headers["Content-Type"] = "application/json";
     return newConfig;
   });
 }
 
 export default function useAxios() {
-  const axiosInstance = axios.create({ baseURL: "/api" });
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
+  });
   const { data: session } = useSession();
 
   useEffect(() => {

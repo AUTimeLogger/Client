@@ -25,7 +25,13 @@ export default function UsersPage() {
   };
 
   const addUser = async (user: User) => {
-    return axios.post("/users", JSON.stringify(user));
+    return axios.post("/users", JSON.stringify(user), {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(
+          "aut-time-logger-token"
+        )}`,
+      },
+    });
   };
 
   const deleteUser = async (userId: string) => {

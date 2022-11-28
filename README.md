@@ -13,6 +13,7 @@ First, set up a development `.env.local` file with the following values:
 
 ```bash
 NEXT_PUBLIC_MOCKING=true
+NEXT_PUBLIC_API_URL=http://localhost:8090/api
 NEXTAUTH_URL=http://localhost:3000/
 NEXTAUTH_SECRET=REBk6KFONys1Z73ktmIiAgeyXt3MUpiLsZkYf4IqWIQ=
 ```

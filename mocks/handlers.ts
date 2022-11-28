@@ -48,10 +48,10 @@ export const handlers = [
   rest.get("/api/me", (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.json(createMe()));
   }),
-  rest.post("/api/Access/login", (req, res, ctx) => {
+  rest.post("/api/access/login", (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.json(createToken()));
   }),
-  rest.post("/api/Access/logout", (req, res, ctx) => {
+  rest.post("/api/access/logout", (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.status(204));
   }),
   rest.get(

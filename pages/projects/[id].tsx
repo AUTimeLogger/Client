@@ -69,7 +69,6 @@ export default function ProjectPage() {
   }
 
   function handleAddUserClick() {
-    console.log(userToAdd);
     addUserMutation.mutate({ userToAdd });
     setUserToAdd(null);
   }
