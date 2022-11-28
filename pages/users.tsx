@@ -11,26 +11,28 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import AddUserForm from "@/components/forms/add-user-form";
 import Table from "@/components/table";
+import useAxios from "@/hooks/use-axios";
 import { User } from "../mocks/types";
 
-const getUsers = async () => {
-  return fetch("/users").then((res) => res.json());
-};
-
-const addUser = async (user: User) => {
-  return axios.post("/users", JSON.stringify(user));
-};
-
-const deleteUser = async (userId: string) => {
-  return axios.delete(`/users/${userId}`);
-};
-
 export default function UsersPage() {
+  const axios = useAxios();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [notification, setNotification] = useState("");
-  const { isError, data: users } = useQuery(["users"], getUsers);
-
   const queryClient = useQueryClient();
+
+  const getUsers = async () => {
+    return axios.get("/users").then((res) => res.data);
+  };
+
+  const addUser = async (user: User) => {
+    return axios.post("/users", JSON.stringify(user));
+  };
+
+  const deleteUser = async (userId: string) => {
+    return axios.delete(`/users/${userId}`);
+  };
+
+  const { isError, data: users } = useQuery(["users"], getUsers);
 
   const addUserMutation = useMutation(addUser, {
     onError: () => {

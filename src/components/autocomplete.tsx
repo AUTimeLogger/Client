@@ -152,7 +152,7 @@ type AutocompleteProps = {
 };
 
 export default function Autocomplete(props: any) {
-  const { loading } = props;
+  const { loading, label } = props;
   return (
     <MuiAutocomplete
       id="virtualize-demo"
@@ -163,7 +163,7 @@ export default function Autocomplete(props: any) {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Search users"
+          label={label}
           size="small"
           InputProps={{
             ...params.InputProps,

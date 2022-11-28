@@ -8,6 +8,7 @@ import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import ProjectCard from "@/components/project-card";
+import useAxios from "@/hooks/use-axios";
 import { Project } from "../mocks/types";
 
 const CURRENT_PAGE_URI = "/projects";
@@ -55,8 +56,9 @@ function SkeletonGrid() {
 }
 
 export default function ProjectsPage() {
+  const axios = useAxios();
   const { isLoading, error, data } = useQuery(["projects"], () =>
-    fetch(CURRENT_PAGE_URI).then((res) => res.json())
+    axios.get(CURRENT_PAGE_URI).then((res) => res.data)
   );
   const router = useRouter();
 

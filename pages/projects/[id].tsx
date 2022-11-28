@@ -15,8 +15,10 @@ import Typography from "@mui/material/Typography";
 import { User } from "@/../mocks/types";
 import Autocomplete from "@/components/autocomplete";
 import Table from "@/components/table";
+import useAxios from "@/hooks/use-axios";
 
 export default function ProjectPage() {
+  const axios = useAxios();
   const router = useRouter();
   const { id } = router.query;
   const [open, setOpen] = useState(false);
@@ -24,27 +26,23 @@ export default function ProjectPage() {
   const [userToAdd, setUserToAdd] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const addUserMutation = useMutation(
-    (userId) => {
-      fetch(`/projects/${id}/users`, {
-        method: "POST",
-        body: JSON.stringify({ userId: userId }),
-      });
+  const addUser = async (userId: string | null) => {
+    axios.post(`/projects/${id}/users`, JSON.stringify({ userId: userId }));
+  };
+
+  const addUserMutation = useMutation(addUser, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["users"]);
-      },
-    }
-  );
+  });
 
   const { isLoading, data: allUsers } = useQuery(
     ["allUsers"],
-    (): Promise<User[]> => fetch("/users").then((res) => res.json())
+    (): Promise<User[]> => axios.get("/users").then((res) => res.data)
   );
 
   const { data: project } = useQuery(["project"], () =>
-    fetch(`/projects/${id}`).then((res) => res.json())
+    axios.get(`/projects/${id}`).then((res) => res.data)
   );
 
   const projectId = project?.projectId;
@@ -56,7 +54,7 @@ export default function ProjectPage() {
     data: users,
   } = useQuery(
     ["users", projectId],
-    () => fetch(`/projects/${id}/users`).then((res) => res.json()),
+    () => axios.get(`/projects/${id}/users`).then((res) => res.data),
     {
       enabled: !!projectId,
     }
@@ -127,6 +125,7 @@ export default function ProjectPage() {
           onClose={() => {
             setOpen(false);
           }}
+          label="Search users"
           loading={isLoading}
           isOptionEqualToValue={(option: User, value: User) =>
             option.userId === value.userId

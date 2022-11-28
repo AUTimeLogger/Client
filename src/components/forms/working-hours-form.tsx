@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import dayjs, { Dayjs } from "dayjs";
 import capitalize from "lodash/capitalize";
 import Alert from "@mui/material/Alert";
@@ -16,6 +15,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Project } from "@/../mocks/types";
 import DatePicker from "@/components/date-picker";
+import useAxios from "@/hooks/use-axios";
 
 type WorkHoursRequestType = {
   userId: string;
@@ -27,18 +27,6 @@ type WorkHoursRequestType = {
   };
 };
 
-const addWorkHours = async (workHours: WorkHoursRequestType) => {
-  const queryParams = new URLSearchParams({
-    userId: workHours.userId,
-    projectId: workHours.projectId,
-  }).toString();
-
-  return axios.post(
-    `/work-hours?${queryParams}`,
-    JSON.stringify(workHours.workUnit)
-  );
-};
-
 type WorkingHoursFormProps = {
   projects: {
     data: Project[];
@@ -47,10 +35,23 @@ type WorkingHoursFormProps = {
 };
 
 export default function WorkingHoursForm({ projects }: WorkingHoursFormProps) {
+  const axios = useAxios();
   const [project, setProject] = useState("");
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
   const [endTime, setEndTime] = useState<Dayjs | null>(null);
   const [notification, setNotification] = useState("");
+
+  const addWorkHours = async (workHours: WorkHoursRequestType) => {
+    const queryParams = new URLSearchParams({
+      userId: workHours.userId,
+      projectId: workHours.projectId,
+    }).toString();
+
+    return axios.post(
+      `/work-hours?${queryParams}`,
+      JSON.stringify(workHours.workUnit)
+    );
+  };
 
   const addWorkHoursMutation = useMutation(addWorkHours, {
     onError: () => {

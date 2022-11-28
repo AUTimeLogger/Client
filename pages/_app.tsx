@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
-import Layout from "@/components/layouts";
+import Layout from "@/layout/layout";
 import createEmotionCache from "@/utils/createEmotionCache";
 import theme from "@/utils/theme";
 
@@ -46,6 +46,7 @@ export default function MyApp(props: MyAppProps) {
       <SessionProvider session={session}>
         <Head>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
+          <title>AUTimeLogger</title>
         </Head>
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

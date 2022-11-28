@@ -14,7 +14,7 @@ function createMe() {
     firstName: c.first(),
     lastName: c.last(),
     email: c.email(),
-    isAdmin: c.bool(),
+    isAdmin: true,
   };
 }
 
@@ -45,14 +45,17 @@ function createProjectList(number: number): Project[] {
 }
 
 export const handlers = [
-  rest.get("/me", (req, res, ctx) => {
+  rest.get("/api/me", (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.json(createMe()));
   }),
-  rest.post("/Access/login", (req, res, ctx) => {
+  rest.post("/api/Access/login", (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.json(createToken()));
   }),
+  rest.post("/api/Access/logout", (req, res, ctx) => {
+    return res(ctx.delay(1000), ctx.status(204));
+  }),
   rest.get(
-    "/projects",
+    "/api/projects",
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -62,7 +65,7 @@ export const handlers = [
     }
   ),
   rest.get(
-    "/projects/:id",
+    "/api/projects/:id",
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -72,7 +75,7 @@ export const handlers = [
     }
   ),
   rest.get(
-    "/projects/:id/users",
+    "/api/projects/:id/users",
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -82,7 +85,7 @@ export const handlers = [
     }
   ),
   rest.post(
-    "/projects/:id/users",
+    "/api/projects/:id/users",
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -92,7 +95,7 @@ export const handlers = [
     }
   ),
   rest.get(
-    "/users",
+    "/api/users",
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -101,7 +104,7 @@ export const handlers = [
       return res(ctx.delay(1000), ctx.json(createUserList(200)));
     }
   ),
-  rest.post("/users", async (req, res, ctx) => {
+  rest.post("/api/users", async (req, res, ctx) => {
     const user = await req.json();
     if (user.username === "error") {
       return res(ctx.delay(1000), ctx.status(403));
@@ -110,7 +113,7 @@ export const handlers = [
     return res(ctx.delay(1000), ctx.json(createUser()));
   }),
   rest.delete(
-    "/users/:id",
+    "/api/users/:id",
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -119,7 +122,7 @@ export const handlers = [
       return res(ctx.delay(1000), ctx.status(200));
     }
   ),
-  rest.post("/work-hours", (req, res, ctx) => {
+  rest.post("/api/work-hours", (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.status(201));
   }),
 ];

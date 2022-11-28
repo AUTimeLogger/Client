@@ -20,8 +20,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import LoadingContent from "./contents/loading-content";
-import UnauthorizedContent from "./contents/unauthorized-content";
+import LoadingContent from "@/components/contents/loading-content";
+import UnauthorizedContent from "@/components/contents/unauthorized-content";
+import useAxios from "@/hooks/use-axios";
 
 type DrawerProps = {
   children?: React.ReactNode;
@@ -29,10 +30,11 @@ type DrawerProps = {
 
 const drawerWidth = 200;
 const getIdentity = async () => {
-  return fetch("/me").then((res) => res.json());
+  return fetch("/api/me").then((res) => res.json());
 };
 
 export default function Drawer({ children }: DrawerProps) {
+  const axios = useAxios();
   const router = useRouter();
 
   const {
@@ -68,8 +70,8 @@ export default function Drawer({ children }: DrawerProps) {
     },
     {
       id: uuidv4(),
-      title: "Logs",
-      href: "/logs",
+      title: "Reports",
+      href: "/reports",
       icon: <ClipboardDocumentListIcon style={{ height: 24 }} />,
       disabled: !identity.isAdmin,
     },
@@ -77,6 +79,11 @@ export default function Drawer({ children }: DrawerProps) {
 
   function handleMenuItemClick(href: string) {
     router.push(href);
+  }
+
+  function handleSignOut() {
+    axios.post("/Access/logout");
+    // signOut();
   }
 
   function isActivePage(href: string) {
@@ -156,7 +163,7 @@ export default function Drawer({ children }: DrawerProps) {
           <List sx={{ width: "100%", px: 1 }}>
             <ListItem
               sx={{ color: "grey.600" }}
-              onClick={() => signOut()}
+              onClick={() => handleSignOut()}
               disablePadding
             >
               <ListItemButton sx={{ borderRadius: 3 }}>

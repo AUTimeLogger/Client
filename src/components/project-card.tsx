@@ -23,16 +23,12 @@ export default function ProjectCard({
   return (
     <Card>
       <CardContent>
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ pb: 2 }}>
+        <Stack direction="row" spacing={1} alignItems="center" sx={{ pb: 1 }}>
           <DocumentTextIcon style={{ height: 24 }} />
           <Typography gutterBottom variant="h5" component="div">
             {title}
           </Typography>
         </Stack>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography>
       </CardContent>
       {!disableAction && (
         <CardActions>
