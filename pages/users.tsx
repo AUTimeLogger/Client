@@ -111,7 +111,7 @@ export default function UsersPage() {
   return (
     <>
       <Grid container>
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} xl={8}>
           <Stack
             direction="row"
             justifyContent="space-between"

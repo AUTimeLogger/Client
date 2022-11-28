@@ -4,6 +4,20 @@ import { Project, User } from "./types";
 
 const c = new Chance();
 
+function createToken() {
+  return { token: c.guid() };
+}
+
+function createMe() {
+  return {
+    userName: c.word(),
+    firstName: c.first(),
+    lastName: c.last(),
+    email: c.email(),
+    isAdmin: c.bool(),
+  };
+}
+
 function createUser(): User {
   return {
     userId: c.guid(),
@@ -31,6 +45,12 @@ function createProjectList(number: number): Project[] {
 }
 
 export const handlers = [
+  rest.get("/me", (req, res, ctx) => {
+    return res(ctx.delay(1000), ctx.json(createMe()));
+  }),
+  rest.post("/Access/login", (req, res, ctx) => {
+    return res(ctx.delay(1000), ctx.json(createToken()));
+  }),
   rest.get(
     "/projects",
     (

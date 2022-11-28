@@ -8,6 +8,8 @@ import {
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+import { useQuery } from "@tanstack/react-query";
+import { signOut } from "next-auth/react";
 import { v4 as uuidv4 } from "uuid";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -18,42 +20,60 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import LoadingContent from "./contents/loading-content";
+import UnauthorizedContent from "./contents/unauthorized-content";
 
 type DrawerProps = {
   children?: React.ReactNode;
 };
 
-const menuItems = [
-  {
-    id: uuidv4(),
-    title: "Dashboard",
-    href: "/",
-    icon: <HomeIcon style={{ height: 24 }} />,
-  },
-  {
-    id: uuidv4(),
-    title: "Users",
-    href: "/users",
-    icon: <UsersIcon style={{ height: 24 }} />,
-  },
-  {
-    id: uuidv4(),
-    title: "Projects",
-    href: "/projects",
-    icon: <DocumentDuplicateIcon style={{ height: 24 }} />,
-  },
-  {
-    id: uuidv4(),
-    title: "Logs",
-    href: "/logs",
-    icon: <ClipboardDocumentListIcon style={{ height: 24 }} />,
-  },
-];
-
 const drawerWidth = 200;
+const getIdentity = async () => {
+  return fetch("/me").then((res) => res.json());
+};
 
 export default function Drawer({ children }: DrawerProps) {
   const router = useRouter();
+
+  const {
+    isError,
+    isLoading,
+    data: identity,
+  } = useQuery(["identity"], getIdentity);
+
+  if (isLoading) return <LoadingContent />;
+  if (isError) return <UnauthorizedContent />;
+
+  const menuItems = [
+    {
+      id: uuidv4(),
+      title: "Dashboard",
+      href: "/",
+      icon: <HomeIcon style={{ height: 24 }} />,
+      disabled: false,
+    },
+    {
+      id: uuidv4(),
+      title: "Users",
+      href: "/users",
+      icon: <UsersIcon style={{ height: 24 }} />,
+      disabled: !identity.isAdmin,
+    },
+    {
+      id: uuidv4(),
+      title: "Projects",
+      href: "/projects",
+      icon: <DocumentDuplicateIcon style={{ height: 24 }} />,
+      disabled: !identity.isAdmin,
+    },
+    {
+      id: uuidv4(),
+      title: "Logs",
+      href: "/logs",
+      icon: <ClipboardDocumentListIcon style={{ height: 24 }} />,
+      disabled: !identity.isAdmin,
+    },
+  ];
 
   function handleMenuItemClick(href: string) {
     router.push(href);
@@ -67,7 +87,6 @@ export default function Drawer({ children }: DrawerProps) {
     return href.startsWith(router.pathname);
   }
 
-  console.log(router);
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -112,12 +131,15 @@ export default function Drawer({ children }: DrawerProps) {
               <ListItem
                 key={menuItem.id}
                 disablePadding
-                onClick={() => handleMenuItemClick(menuItem.href)}
+                onClick={() =>
+                  menuItem.disabled ? null : handleMenuItemClick(menuItem.href)
+                }
                 sx={{
                   color: isActivePage(menuItem.href)
                     ? "primary.main"
                     : "grey.600",
                 }}
+                disabled={menuItem.disabled}
               >
                 <ListItemButton sx={{ borderRadius: 3 }}>
                   <ListItemIcon
@@ -132,7 +154,11 @@ export default function Drawer({ children }: DrawerProps) {
           </List>
           <Divider />
           <List sx={{ width: "100%", px: 1 }}>
-            <ListItem sx={{ color: "grey.600" }} disablePadding>
+            <ListItem
+              sx={{ color: "grey.600" }}
+              onClick={() => signOut()}
+              disablePadding
+            >
               <ListItemButton sx={{ borderRadius: 3 }}>
                 <ListItemIcon
                   sx={{ minWidth: 32, display: "inline", color: "inherit" }}
