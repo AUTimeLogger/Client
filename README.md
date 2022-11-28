@@ -9,11 +9,20 @@ To run the application, the following is required:
 
 ## ⏳ Installation
 
-First, set up a development `.env.local` file with a single value:
+First, set up a development `.env.local` file with the following values:
 
 ```bash
 NEXT_PUBLIC_MOCKING=true
+NEXTAUTH_URL=http://localhost:3000/
+NEXTAUTH_SECRET=REBk6KFONys1Z73ktmIiAgeyXt3MUpiLsZkYf4IqWIQ=
 ```
+
+> Upon deployment, a new secret should be generated, and the `NEXTAUTH_URL` value should be replaced to point to the deployment URL.
+> A new secret can easily be generated using the following command:
+>
+> ```
+> openssl rand -base64 32
+> ```
 
 Then run the following installation command from the root directory:
 
