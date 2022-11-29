@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Autocomplete from "@/components/autocomplete";
+import useAxios from "@/hooks/use-axios";
 import { generateNumbersBetween } from "@/utils/helper";
 
 type FakeYear = {
@@ -15,12 +16,35 @@ const years = generateNumbersBetween(1960, new Date().getFullYear()).map(
 );
 
 export default function ReportsPage() {
+  const axios = useAxios();
   const [open, setOpen] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [year, setYear] = useState<FakeYear | null>(null);
 
-  const handleGenerateReportClick = () => {
-    console.log("Generating report...");
-    console.log("Selected year: " + year?.email);
+  const handleGenerateReportClick = async () => {
+    setGenerating(true);
+    const res = await axios
+      .get(`/report/${year.email}`)
+      .then((res) => res.data);
+
+    let i;
+    let arr1 = res.split("\n");
+    let arr2 = [];
+    for (i = 0; i < arr1.length; i++) {
+      arr2[i] = arr1[i].split(";");
+    }
+
+    let csvContent =
+      "data:text/csv;charset=utf-8," + arr2.map((e) => e.join(",")).join("\n");
+
+    let encodedUri = encodeURI(csvContent);
+    let link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `report-export-year-${year.email}.csv`);
+    document.body.appendChild(link);
+
+    link.click();
+    setGenerating(false);
   };
 
   return (
@@ -59,7 +83,7 @@ export default function ReportsPage() {
             variant="contained"
             onClick={handleGenerateReportClick}
             sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-            disabled={!Boolean(year)}
+            disabled={!Boolean(year) || generating}
             disableElevation
           >
             Generate report

@@ -21,6 +21,7 @@ export default function useAxios() {
 
   useEffect(() => {
     interceptRequests(session, axiosInstance);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   interceptRequests(session, axiosInstance);

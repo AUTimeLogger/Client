@@ -95,7 +95,7 @@ export default function Drawer({ children }: DrawerProps) {
 
   function handleSignOut() {
     axios.post("/access/logout");
-    // signOut();
+    signOut();
   }
 
   function isActivePage(href: string) {

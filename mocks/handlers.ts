@@ -44,18 +44,25 @@ function createProjectList(number: number): Project[] {
   return Array.from({ length: number }, createProject);
 }
 
+function createCsv() {
+  return Array.from({ length: 50 }, (v, i) =>
+    i % 5 === 0 && i !== 0 ? "\n" : c.word() + ";"
+  ).join("");
+}
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const handlers = [
-  rest.get("/api/me", (req, res, ctx) => {
+  rest.get(`${baseUrl}/me`, (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.json(createMe()));
   }),
-  rest.post("/api/access/login", (req, res, ctx) => {
+  rest.post(`${baseUrl}/access/login`, (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.json(createToken()));
   }),
-  rest.post("/api/access/logout", (req, res, ctx) => {
+  rest.post(`${baseUrl}/access/logout`, (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.status(204));
   }),
   rest.get(
-    "/api/projects",
+    `${baseUrl}/projects`,
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -65,7 +72,7 @@ export const handlers = [
     }
   ),
   rest.get(
-    "/api/projects/:id",
+    `${baseUrl}/projects/:id`,
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -75,7 +82,7 @@ export const handlers = [
     }
   ),
   rest.get(
-    "/api/projects/:id/users",
+    `${baseUrl}/projects/:id/users`,
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -85,7 +92,7 @@ export const handlers = [
     }
   ),
   rest.post(
-    "/api/projects/:id/users",
+    `${baseUrl}/projects/:id/users`,
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -95,7 +102,7 @@ export const handlers = [
     }
   ),
   rest.get(
-    "/api/users",
+    `${baseUrl}/users`,
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -104,7 +111,7 @@ export const handlers = [
       return res(ctx.delay(1000), ctx.json(createUserList(200)));
     }
   ),
-  rest.post("/api/users", async (req, res, ctx) => {
+  rest.post(`${baseUrl}/users`, async (req, res, ctx) => {
     const user = await req.json();
     if (user.username === "error") {
       return res(ctx.delay(1000), ctx.status(403));
@@ -113,7 +120,7 @@ export const handlers = [
     return res(ctx.delay(1000), ctx.json(createUser()));
   }),
   rest.delete(
-    "/api/users/:id",
+    `${baseUrl}/users/:id`,
     (
       req: any,
       res: (arg0: any, arg1: any) => any,
@@ -122,7 +129,10 @@ export const handlers = [
       return res(ctx.delay(1000), ctx.status(200));
     }
   ),
-  rest.post("/api/work-hours", (req, res, ctx) => {
+  rest.post(`${baseUrl}/work-hours`, (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.status(201));
+  }),
+  rest.get(`${baseUrl}/report/:id`, (req, res, ctx) => {
+    return res(ctx.delay(1000), ctx.json(createCsv()));
   }),
 ];

@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  ui:
+    build: 
+      context: .
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_MOCKING: true
+      NEXT_PUBLIC_API_URL: http://localhost:8090/api
+      NEXT_PUBLIC_NEXTAUTH_URL: http://localhost:3000/
+      NEXTAUTH_URL: http://localhost:3000/
+      NEXT_PUBLIC_NEXTAUTH_SECRET: Iz-LFF6BhE4bnB4YlgK65O2n1vX8asjs2jpltUJ7vMMXOY6yIWP_Gvb6vOKVsKLCAQSsKENFDl64T7FWWEZKww
